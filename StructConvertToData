@@ -1,0 +1,28 @@
+//
+//  File.swift
+//  weixindress
+//
+//  Created by kevin on 15/8/26.
+//  Copyright (c) 2015年 www.jd.com. All rights reserved.
+//
+
+// 在swift中，将结构体对象转成NSData
+
+import Foundation
+
+class StructConvertToData {
+    
+    class func encode<T>(value:T) -> NSData {
+        var data:T = value
+        return withUnsafePointer( &data ) { p in
+            NSData(bytes: p, length: sizeofValue(data))
+        }
+    }
+    
+    class func decode<T>(data:NSData) -> T {
+        let pointer = UnsafeMutablePointer<T>.alloc(sizeof(T.Type))
+        data.getBytes(pointer)
+        
+        return pointer.move()
+    }
+}
